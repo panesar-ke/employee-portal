@@ -87,7 +87,7 @@
     @apply border-border;
   }
   body {
-    @apply h-dvh bg-background text-foreground;
+    @apply h-dvh bg-background text-foreground font-sans;
   }
 
   .icon {
