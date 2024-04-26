@@ -9,7 +9,7 @@ const db = drizzle(client, { schema });
 
 export const adapter = new DrizzlePostgreSQLAdapter(
   db,
-  schema.session,
+  schema.employeeSession,
   schema.users
 );
 

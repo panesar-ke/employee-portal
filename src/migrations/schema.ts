@@ -112,7 +112,7 @@ export const session = pgTable('session', {
     .references(() => users.id, { onDelete: 'cascade' }),
   expiresAt: timestamp('expires_at', {
     withTimezone: true,
-    mode: 'date',
+    mode: 'string',
   }).notNull(),
 });
 
@@ -554,6 +554,49 @@ export const ordersDetails = pgTable('orders_details', {
   }),
   // You can use { mode: "bigint" } if numbers are exceeding js number limitations
   requestId: bigint('request_id', { mode: 'number' }),
+});
+
+export const employeeUsers = pgTable(
+  'employee_users',
+  {
+    id: uuid('id').defaultRandom().primaryKey().notNull(),
+    name: text('name').notNull(),
+    contact: varchar('contact', { length: 10 }).notNull(),
+    password: text('password'),
+    employeeType: employeeCategory('employee_type')
+      .default('MANAGEMENT')
+      .notNull(),
+    email: text('email'),
+    image: text('image'),
+    active: boolean('active').default(true).notNull(),
+    promptPasswordChange: boolean('prompt_password_change').default(false),
+    resetToken: text('reset_token'),
+  },
+  table => {
+    return {
+      employeeUserContactIdx: uniqueIndex('employee_user_contact_idx').on(
+        table.contact
+      ),
+      employeeUserNameIdx: index('employee_user_name_idx').on(table.name),
+      employeeUsersContactUnique: unique('employee_users_contact_unique').on(
+        table.contact
+      ),
+      employeeUsersEmailUnique: unique('employee_users_email_unique').on(
+        table.email
+      ),
+    };
+  }
+);
+
+export const employeeSession = pgTable('employee_session', {
+  id: text('id').primaryKey().notNull(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => employeeUsers.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp('expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
 });
 
 export const userRoles = pgTable(
