@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 export default async function Login() {
   const { session } = await validateRequest();
 
-  console.log(session);
   if (session) return redirect('/dashboard');
   return (
     <Card className="max-w-md w-full mx-4 sm:mx-0 ">
