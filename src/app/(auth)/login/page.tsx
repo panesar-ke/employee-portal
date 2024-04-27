@@ -1,7 +1,13 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import LoginForm from '../_components/login-form';
 
 import { validateRequest } from '../../../../auth';
@@ -18,6 +24,9 @@ export default async function Login() {
     <Card className="max-w-md w-full mx-4 sm:mx-0 ">
       <CardHeader>
         <CardTitle>Log In</CardTitle>
+        <CardDescription>
+          Enter your credentials to access the employee portal.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <LoginForm />
