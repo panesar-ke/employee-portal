@@ -556,6 +556,17 @@ export const ordersDetails = pgTable('orders_details', {
   requestId: bigint('request_id', { mode: 'number' }),
 });
 
+export const employeeSession = pgTable('employee_session', {
+  id: text('id').primaryKey().notNull(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => employeeUsers.id, { onDelete: 'cascade' }),
+  expiresAt: timestamp('expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
+});
+
 export const employeeUsers = pgTable(
   'employee_users',
   {
@@ -571,6 +582,8 @@ export const employeeUsers = pgTable(
     active: boolean('active').default(true).notNull(),
     promptPasswordChange: boolean('prompt_password_change').default(false),
     resetToken: text('reset_token'),
+    employeeRefId: integer('employee_ref_id').notNull(),
+    idNumber: text('id_number').notNull(),
   },
   table => {
     return {
@@ -578,6 +591,9 @@ export const employeeUsers = pgTable(
         table.contact
       ),
       employeeUserNameIdx: index('employee_user_name_idx').on(table.name),
+      employeeUserIdNumberIdx: uniqueIndex('employee_user_id_number_idx').on(
+        table.idNumber
+      ),
       employeeUsersContactUnique: unique('employee_users_contact_unique').on(
         table.contact
       ),
@@ -587,17 +603,6 @@ export const employeeUsers = pgTable(
     };
   }
 );
-
-export const employeeSession = pgTable('employee_session', {
-  id: text('id').primaryKey().notNull(),
-  userId: uuid('user_id')
-    .notNull()
-    .references(() => employeeUsers.id, { onDelete: 'cascade' }),
-  expiresAt: timestamp('expires_at', {
-    withTimezone: true,
-    mode: 'date',
-  }).notNull(),
-});
 
 export const userRoles = pgTable(
   'user_roles',
